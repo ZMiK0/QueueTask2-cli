@@ -31,6 +31,8 @@ int createDB(sqlite3 *db)
   FILE *fptr;
   char* dirname;
   char* appdatapath;
+  char* dbpath;
+  int rc;
 
   appdatapath = getOSlocalPath();
   printf("%s\n",appdatapath);
@@ -41,11 +43,17 @@ int createDB(sqlite3 *db)
     char cmd[512];
     snprintf(cmd, sizeof(cmd), "mkdir -p \"%s\"", dirname);
     system(cmd);
-
-    printf("Directorio creado");
+  }
+  dbpath = join_path(dirname, "task.db");
+  rc = sqlite3_open(dbpath, &db);
+  if (rc)
+  {
+    fprintf(stderr, "Can't open database :( %s\n", sqlite3_errmsg(db));
+    sqlite3_close(db);
   }
 
   free(dirname);
+  free(dbpath);
   return 1;
 }
 
