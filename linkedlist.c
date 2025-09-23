@@ -2,11 +2,15 @@
 #include <stdlib.h>
 
 typedef struct node {
-    int data;
+    char* data;
     struct node* next;
 } node;
 
-node* create(int data, node* next)
+typedef struct LinkedList {
+    struct node* head;
+} LinkedList;
+
+node* create(char* data, node* next)
 {
     node* new_node = (node*)malloc(sizeof(node));
 
@@ -20,12 +24,11 @@ node* create(int data, node* next)
     return (new_node);
 }
 
-node* prepend(node* head, int data)
+void prepend(LinkedList* list, char* data)
 {
     node* new_node = create(data,NULL);
-    head = new_node;
-
-    return (head);
+    new_node->next = list->head;
+    list->head = new_node;
 }
 
 int count(node *head)
@@ -42,7 +45,7 @@ int count(node *head)
     return (i);
 }
 
-node *push(node* head, int data)
+node *push(node* head, char* data)
 {
     node *cursor = head;
     while (cursor->next != NULL)
@@ -52,7 +55,7 @@ node *push(node* head, int data)
     return (head);
 }
 
-int get(node* head, int n)
+char* get(node* head, int n)
 {
     node *cursor = head;
     int i = 0;

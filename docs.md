@@ -11,6 +11,7 @@ El programa empieza con un menú donde puedes:
 Las tareas se guardan en una base de datos sqlite.
 
 Las tareas se llaman desde la base de datos cada vez que se inicia el programa y se guardan en una LinkedList.
+    - Primero se llama a la base de datos, si esta vacia se 
 
 Al terminar el programa Y SOLO SI SE TERMINA CORRECTAMENTE, se purga la tabla de la base de datos y la LinkedList se guarda en la base de datos (en una nueva tabla).
 

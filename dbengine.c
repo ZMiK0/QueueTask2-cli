@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
+#include "linkedlib.h"
 
 char* getOSlocalPath()
 {
@@ -26,38 +27,36 @@ char *join_path(const char* path1, const char* path2)
   return result;
 }
 
-int createDB(sqlite3 *db)
+int createDB(sqlite3 *db, char* dbpath)
 {
-  FILE *fptr;
-  char* dirname;
-  char* appdatapath;
-  char* homedir;
-  char* dbpath;
+
+  char* stmt;
+  char* error;
   int rc;
 
-  homedir = getenv("HOME");
-  appdatapath = getOSlocalPath();
-  appdatapath = join_path(homedir, appdatapath);
-  dirname = join_path(appdatapath, "queuetask2-cli");
-  if (mkdir(dirname, 0777) == -1)
-  {
-    char cmd[512];
-    snprintf(cmd, sizeof(cmd), "mkdir -p \"%s\"", dirname);
-    system(cmd);
-  }
-  dbpath = join_path(dirname, "task.db");
-  char cmd[512];
-  snprintf(cmd, sizeof(cmd), "touch \"%s\"",dbpath);
-  system(cmd);
   rc = sqlite3_open(dbpath, &db);
   if (rc)
   {
     fprintf(stderr, "Can't open database :( - %s\n", sqlite3_errmsg(db));
     sqlite3_close(db);
   }
-
-  free(dirname);
+  error = "ERROR";
+  stmt = "CREATE TABLE IF NOT EXISTS tasklist (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT);";
+  rc = sqlite3_exec(db, stmt,NULL, 0, &error);
+  if (rc)
+  {
+    fprintf(stderr, "ERROR EXECUTING - %s\n", error);
+    sqlite3_free(error);
+  }
   free(dbpath);
   sqlite3_close(db);
   return 1;
+}
+
+int makeTaskList(void* list, int count, char** data, char** column)
+{
+    struct LinkedList *head = list;
+    push(head->head, data[1]);
+    printf("%s\n",get(head->head, 1));
+    return 0;
 }
