@@ -91,6 +91,8 @@ node* removeHead(node* head)
 {
     node *temp;
 
+    if (head == NULL) return NULL;
+
     temp = head;
     head = head->next;
     free(temp);

@@ -48,15 +48,42 @@ int createDB(sqlite3 *db, char* dbpath)
     fprintf(stderr, "ERROR EXECUTING - %s\n", error);
     sqlite3_free(error);
   }
-  free(dbpath);
   sqlite3_close(db);
   return 1;
 }
 
 int makeTaskList(void* list, int count, char** data, char** column)
 {
-    struct LinkedList *head = list;
-    push(head->head, data[1]);
-    printf("%s\n",get(head->head, 1));
-    return 0;
+  struct LinkedList *head = list;
+  if (data[1] != NULL)
+  {
+    char* taskcpy = strdup(data[1]);
+    push(head->head, taskcpy);
+  }
+  
+  return 0;
+}
+
+int pushTask(sqlite3 *db, char* dbpath, char* task)
+{
+  char* stmt;
+  char* error;
+  int rc;
+
+  rc = sqlite3_open(dbpath, &db);
+  if (rc)
+  {
+    fprintf(stderr, "Can't open database :( - %s\n", sqlite3_errmsg(db));
+    sqlite3_close(db);
+  }
+  error = "ERROR";
+  stmt = "INSERT INTO tasklist (task) VALUES ('%s');";
+  rc = sqlite3_exec(db, stmt,NULL, 0, &error);
+  if (rc)
+  {
+    fprintf(stderr, "ERROR EXECUTING - %s\n", error);
+    sqlite3_free(error);
+  }
+  sqlite3_close(db);
+  return 1;
 }

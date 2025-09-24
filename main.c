@@ -46,6 +46,7 @@ int main()
   prepend(&list, "");
 
   dbpath = getdbPath();
+  createDB(db, dbpath);
   
   stmt = "SELECT * FROM tasklist";
   err = "ERROR";
@@ -56,23 +57,25 @@ int main()
     fprintf(stderr, "Can't open database :( - %s\n", sqlite3_errmsg(db));
     sqlite3_close(db);
     return 1;
+  } else {
+    rc = sqlite3_exec(db, stmt, makeTaskList, &list, &err);
+    if (rc)
+    {
+      fprintf(stderr, "Can't execute :( - %s\n", sqlite3_errmsg(db));
+      sqlite3_close(db);
+      return 1;
+    }
   }
 
 
-  rc = sqlite3_exec(db, stmt, makeTaskList, &list, &err);
-  if (rc)
-  {
-    fprintf(stderr, "Can't execute :( - %s\n", sqlite3_errmsg(db));
-    sqlite3_close(db);
-    return 1;
-  }
+  
   list.head = removeHead(list.head);
   printf("%s\n",get(list.head, 0));
   printf("%s\n",get(list.head, 1));
   printf("%s\n",get(list.head, 2));
   printf("%s\n",get(list.head, 3));
 
-
+  free(dbpath);
   sqlite3_close(db);
   return 0;
 }
