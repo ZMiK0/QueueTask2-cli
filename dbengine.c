@@ -64,7 +64,7 @@ int removeDB(sqlite3 *db, char* dbpath)
     sqlite3_close(db);
   }
   error = "ERROR";
-  stmt = "DROP TABLE IF EXISTS tasklist;";
+  stmt = "DROP TABLE tasklist;";
   rc = sqlite3_exec(db, stmt,NULL, 0, &error);
   if (rc)
   {

@@ -46,7 +46,8 @@ int start(sqlite3 *db, char* dbpath, LinkedList list)
   char* err;
   int rc;
 
-  createDB(db, dbpath);
+  if (!createDB(db, dbpath))
+    return 0;
 
   stmt = "SELECT * FROM tasklist";
   err = "ERROR";
@@ -89,9 +90,12 @@ int main()
 
 
   traverseList(list.head);
+  removeByIndex(list.head, 2);
 
   if (!logout(&list, db, dbpath))
     return 1;
+
+  traverseList(list.head);
   
   free(dbpath);
   sqlite3_close(db);
