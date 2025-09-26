@@ -5,7 +5,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
-#include "linkedlib.h"
 #include "dbenginelib.h"
 
 char* getdbPath()
@@ -34,20 +33,21 @@ char* getdbPath()
   return (dbpath);
 }
 
-
-int main()
+int logout(LinkedList *list, sqlite3 *db, char* dbpath)
 {
-  sqlite3 *db;
-  char* dbpath;
+  if (!remadeDB(list->head, db, dbpath))
+    return 0;
+  return 1;
+}
+
+int start(sqlite3 *db, char* dbpath, LinkedList list)
+{
   char* stmt;
   char* err;
   int rc;
-  LinkedList list = {};
-  prepend(&list, "");
 
-  dbpath = getdbPath();
   createDB(db, dbpath);
-  
+
   stmt = "SELECT * FROM tasklist";
   err = "ERROR";
 
@@ -56,25 +56,43 @@ int main()
   {
     fprintf(stderr, "Can't open database :( - %s\n", sqlite3_errmsg(db));
     sqlite3_close(db);
-    return 1;
+    return 0;
   } else {
     rc = sqlite3_exec(db, stmt, makeTaskList, &list, &err);
     if (rc)
     {
       fprintf(stderr, "Can't execute :( - %s\n", sqlite3_errmsg(db));
       sqlite3_close(db);
-      return 1;
+      return 0;
     }
   }
+  return 1;
+}
 
 
+int main()
+{
+  sqlite3 *db;
+  char* dbpath;
+  
+  LinkedList list = {};
+  prepend(&list, "");
+
+  dbpath = getdbPath();
+  if (!start(db, dbpath, list))
+    return 1;
   
   list.head = removeHead(list.head);
-  printf("%s\n",get(list.head, 0));
-  printf("%s\n",get(list.head, 1));
-  printf("%s\n",get(list.head, 2));
-  printf("%s\n",get(list.head, 3));
 
+
+
+
+
+  traverseList(list.head);
+
+  if (!logout(&list, db, dbpath))
+    return 1;
+  
   free(dbpath);
   sqlite3_close(db);
   return 0;

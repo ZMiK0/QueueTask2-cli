@@ -14,3 +14,4 @@ node *push(node* head, char* data);
 char* get(node* head, int n);
 int removeByIndex(node* head, int n);
 node* removeHead(node* head);
+void traverseList(node* head);

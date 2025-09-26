@@ -99,6 +99,17 @@ node* removeHead(node* head)
     return head;
 }
 
+void traverseList(node* head)
+{
+    node* current = head;
+    while(current != NULL)
+    {
+        printf("%s -> ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
 /*
 int main()
 {
