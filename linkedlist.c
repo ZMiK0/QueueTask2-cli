@@ -102,12 +102,15 @@ node* removeHead(node* head)
 void traverseList(node* head)
 {
     node* current = head;
+    int i;
+
+    i = 0;
     while(current != NULL)
     {
-        printf("%s -> ", current->data);
+        printf(" %d - %s\n", i, current->data);
+        i++;
         current = current->next;
     }
-    printf("\n");
 }
 
 /*

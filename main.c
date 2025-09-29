@@ -70,15 +70,36 @@ int start(sqlite3 *db, char* dbpath, LinkedList list)
   return 1;
 }
 
-void printMenu()
+void printMenu(LinkedList list)
 {
+  char* startstr = "┃ 1. Start             ┃\n";
+  if (get(list.head, 0) == NULL)
+    startstr =     "┃ 1. Start (EMPTY)     ┃\n";
+
   printf("\e[1;1H\e[2J");
   printf("┏━━━━━━━━━━━━━━━━━━━━━━┓\n");
   printf("┃ WELCOME TO QUEUETASK ┃\n");
   printf("┣━━━━━━━━━━━━━━━━━━━━━━┫\n");
-  printf("┃ 1. Start             ┃\n");
+  printf("%s", startstr);
   printf("┃ 2. Edit queue        ┃\n");
-  printf("┃ 3. End program.      ┃\n");
+  printf("┃ 0. End program.      ┃\n");
+  printf("┣━━━━━━━━━━━━━━━━━━━━━━┛\n");
+  printf("┗━▶ Option: ");
+}
+
+void printEditMenu(LinkedList list)
+{
+  printf("\e[1;1H\e[2J");
+  printf("┏━━━━━━━━━━━━━━━━━━━━━━┓\n");
+  printf("┃   QUEUE EDIT MENU    ┃\n");
+  printf("┗━━━━━━━━━━━━━━━━━━━━━━┛\n");
+  traverseList(list.head);
+  printf("┏━━━━━━━━━━━━━━━━━━━━━━┓\n");
+  printf("┃ 1. ADD TASK          ┃\n");
+  printf("┃ 2. INSERT TASK BY ID ┃\n");
+  printf("┃ 3. REMOVE TASK BY ID ┃\n");
+  printf("┃                      ┃\n");
+  printf("┃ 0. EXIT              ┃\n");
   printf("┣━━━━━━━━━━━━━━━━━━━━━━┛\n");
   printf("┗━▶ Option: ");
 }
@@ -89,28 +110,65 @@ int main()
   sqlite3 *db;
   char* dbpath;
   int isOver;
+  int isEditionOver;
   char option;
+  char editOption;
+  char task[1024];
   
   LinkedList list = {};
-  prepend(&list, "");
+  prepend(&list, NULL);
 
   dbpath = getdbPath();
   if (!start(db, dbpath, list))
     return 1;
   
-  list.head = removeHead(list.head);
+  
 
   isOver = 0;
   while (!isOver)
   {
     option = '0';
-    printMenu();
+    printMenu(list);
     scanf("%c", &option);
-    if (option == '3')
+    if (option == '0')
       isOver = 1;
+    else if (option == '1')
+    {
+      if (get(list.head, 0) != NULL)
+      {
+
+      }
+      else
+      {
+        printf("QUEUE IS EMPTY\n");
+      }
+    }
+    else if (option == '2')
+    {
+      isEditionOver = 0;
+      while (!isEditionOver)
+      {
+        printEditMenu(list);
+        scanf("%c", &editOption);
+        if(editOption == '0')
+          isEditionOver = 1;
+        else if (editOption == '1')
+        {
+          printf("━━▶ Task: ");
+          scanf("%s", task);
+          char* taskcpy = strdup(task);
+          push(list.head, taskcpy);
+          if (get(list.head, 0) == NULL)
+            list.head = removeHead(list.head);
+        }
+      }
+      
+    }
+
   }
   
-
+  if (get(list.head, 0) == NULL)
+    list.head = removeHead(list.head);
   if (!logout(&list, db, dbpath))
     return 1;
   free(dbpath);

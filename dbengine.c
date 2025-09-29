@@ -87,6 +87,38 @@ int makeTaskList(void* list, int count, char** data, char** column)
   return 0;
 }
 
+int checkEmpty(void* list, int count, char** data, char** column)
+{
+  //TODO
+}
+
+int isDataBaseEmpty(LinkedList list, sqlite3 *db, char* dbpath)
+{
+  char* stmt;
+  char* err;
+  int rc;
+  int isEmpty;
+
+  stmt = "SELECT * FROM tasklist";
+  err = "ERROR";
+
+  rc = sqlite3_open(dbpath, &db);
+  if (rc)
+  {
+    fprintf(stderr, "Can't open database :( - %s\n", sqlite3_errmsg(db));
+    sqlite3_close(db);
+    return 1;
+  } else {
+    rc = sqlite3_exec(db, stmt, makeTaskList, &list, &err);
+    if (rc)
+    {
+      fprintf(stderr, "Can't execute :( - %s\n", sqlite3_errmsg(db));
+      sqlite3_close(db);
+      return 1;
+    }
+  }
+}
+
 int pushTask(sqlite3 *db, char* dbpath, char* task)
 {
   char stmt[512];
