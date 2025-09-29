@@ -70,11 +70,26 @@ int start(sqlite3 *db, char* dbpath, LinkedList list)
   return 1;
 }
 
+void printMenu()
+{
+  printf("\e[1;1H\e[2J");
+  printf("┏━━━━━━━━━━━━━━━━━━━━━━┓\n");
+  printf("┃ WELCOME TO QUEUETASK ┃\n");
+  printf("┣━━━━━━━━━━━━━━━━━━━━━━┫\n");
+  printf("┃ 1. Start             ┃\n");
+  printf("┃ 2. Edit queue        ┃\n");
+  printf("┃ 3. End program.      ┃\n");
+  printf("┣━━━━━━━━━━━━━━━━━━━━━━┛\n");
+  printf("┗━▶ Option: ");
+}
+
 
 int main()
 {
   sqlite3 *db;
   char* dbpath;
+  int isOver;
+  char option;
   
   LinkedList list = {};
   prepend(&list, "");
@@ -85,18 +100,19 @@ int main()
   
   list.head = removeHead(list.head);
 
-
-
-
-
-  traverseList(list.head);
-  removeByIndex(list.head, 2);
+  isOver = 0;
+  while (!isOver)
+  {
+    option = '0';
+    printMenu();
+    scanf("%c", &option);
+    if (option == '3')
+      isOver = 1;
+  }
+  
 
   if (!logout(&list, db, dbpath))
     return 1;
-
-  traverseList(list.head);
-  
   free(dbpath);
   sqlite3_close(db);
   return 0;
