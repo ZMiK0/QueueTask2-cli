@@ -116,11 +116,15 @@ int removeByIndex(node* head, int n)
 node* removeHead(node* head)
 {
     node *temp;
+    struct node* null = {NULL, NULL};
 
     if (head == NULL) return NULL;
 
     temp = head;
-    head = head->next;
+    if (head->next != NULL)
+        head = head->next;
+    else
+        head = null;
     free(temp);
     return head;
 }

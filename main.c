@@ -107,6 +107,21 @@ void printEditMenu(LinkedList list)
   printf("┗━▶ Option: ");
 }
 
+void printPlayMenu(LinkedList list)
+{
+  printf("\e[1;1H\e[2J");
+  printf("┏━━━━━━━━━━━━━━━━━━━━━━┓\n");
+  printf("┃     CURRENT TASK     ┃\n");
+  printf("┗━━━━━━━━━━━━━━━━━━━━━━┛\n");
+  printf("%s\n",get(list.head, 0));
+  printf("┏━━━━━━━━━━━━━━━━━━━━━━┓\n");
+  printf("┃ 1. COMPLETE TASK     ┃\n");
+  printf("┃                      ┃\n");
+  printf("┃ 0. EXIT              ┃\n");
+  printf("┣━━━━━━━━━━━━━━━━━━━━━━┛\n");
+  printf("┗━▶ Option: ");
+}
+
 
 int main()
 {
@@ -114,8 +129,10 @@ int main()
   char* dbpath;
   int isOver;
   int isEditionOver;
+  int playing;
   char option;
   char editOption;
+  char playOption;
   char task[1024];
   
   LinkedList list = {};
@@ -131,7 +148,6 @@ int main()
   isOver = 0;
   while (!isOver)
   {
-    option = '0';
     printMenu(list);
     scanf("%c", &option);
     if (option == '0')
@@ -140,11 +156,21 @@ int main()
     {
       if (get(list.head, 0) != NULL)
       {
-
-      }
-      else
-      {
-        printf("QUEUE IS EMPTY\n");
+        playing = 1;
+        while (playing)
+        {
+          if (get(list.head, 0) != NULL)
+          {
+            printPlayMenu(list);
+            scanf("%c", &playOption);
+            if (playOption == '0')
+              playing = 0;
+            else if (playOption == '1')
+              list.head = removeHead(list.head);
+          }
+          else
+            playing = 0;
+        }
       }
     }
     else if (option == '2')
@@ -191,9 +217,7 @@ int main()
           prepend(&list, NULL);
         }
       }
-      
     }
-
   }
   
   if (get(list.head, 0) == NULL)
