@@ -55,6 +55,31 @@ node *push(node* head, char* data)
     return (head);
 }
 
+node *pushByIndex(node* head, char* data, int n)
+{
+    node *cursor = head;
+    node *temp;
+    int i = 0;
+    if (n == 0 && head != NULL)
+    {
+        temp = head;
+        node* new_node = create(data,NULL);
+        new_node->next = temp;
+        head = new_node;
+        return (head);
+    }
+    while (cursor->next != NULL && (i < n-1))
+    {
+        cursor = cursor->next;
+        i++;
+    }
+    temp = cursor->next;
+    node* new_node = create(data,NULL);
+    new_node->next = temp;
+    cursor->next = new_node;
+    return (head);
+}
+
 char* get(node* head, int n)
 {
     node *cursor = head;
@@ -111,6 +136,16 @@ void traverseList(node* head)
         i++;
         current = current->next;
     }
+}
+
+node* purge(node* head)
+{
+    node* current = head;
+    struct node* null = {NULL, NULL};
+    if (current->next == NULL)
+        return null;
+    free(purge(current->next));
+    return null;
 }
 
 /*

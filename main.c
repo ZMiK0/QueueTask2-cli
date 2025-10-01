@@ -100,6 +100,7 @@ void printEditMenu(LinkedList list)
   printf("┃ 1. ADD TASK          ┃\n");
   printf("┃ 2. INSERT TASK BY ID ┃\n");
   printf("┃ 3. REMOVE TASK BY ID ┃\n");
+  printf("┃ 4. PURGE LIST        ┃\n");
   printf("┃                      ┃\n");
   printf("┃ 0. EXIT              ┃\n");
   printf("┣━━━━━━━━━━━━━━━━━━━━━━┛\n");
@@ -163,6 +164,23 @@ int main()
           push(list.head, taskcpy);
           if (get(list.head, 0) == NULL)
             list.head = removeHead(list.head);
+        }
+        else if (editOption == '2')
+        {
+          int n;
+          printf("━━▶ Task: ");
+          scanf("%s", task);
+          printf("━━▶ Desired Index: ");
+          scanf("%d", &n);
+          char* taskcpy = strdup(task);
+          list.head = pushByIndex(list.head, taskcpy, n);
+        }
+        else if (editOption == '3')
+        {}
+        else if (editOption == '4')
+        {
+          list.head = purge(list.head);
+          prepend(&list, NULL);
         }
       }
       
