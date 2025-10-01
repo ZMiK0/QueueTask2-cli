@@ -176,7 +176,15 @@ int main()
           list.head = pushByIndex(list.head, taskcpy, n);
         }
         else if (editOption == '3')
-        {}
+        {
+          int n;
+          printf("━━▶ Desired Index: ");
+          scanf("%d", &n);
+          if (n != 0)
+            removeByIndex(list.head, n);
+          else
+            list.head = removeHead(list.head);
+        }
         else if (editOption == '4')
         {
           list.head = purge(list.head);

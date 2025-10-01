@@ -101,9 +101,10 @@ int removeByIndex(node* head, int n)
 
     if (head == NULL) return 0;
     if (n == 0) return 0;
-    while ((cursor->next != NULL) && (i != n-1))
+    while ((cursor->next->next != NULL) && (i < n-1))
     {
         cursor = cursor->next;
+        printf("%d - %s\n", i, cursor->data);
         i++;
     }
     temp = cursor->next->next;
