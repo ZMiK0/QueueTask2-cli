@@ -7,3 +7,4 @@ int createDB(sqlite3 *db, char* dbpath);
 int makeTaskList(void* list, int count, char** data, char** column);
 int pushTask(sqlite3 *db, char* dbpath, char* task);
 int remadeDB(node* head, sqlite3 *db, char* dbpath);
+int isDataBaseEmpty(LinkedList list, sqlite3 *db, char* dbpath);

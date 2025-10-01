@@ -49,6 +49,7 @@ int start(sqlite3 *db, char* dbpath, LinkedList list)
   if (!createDB(db, dbpath))
     return 0;
 
+
   stmt = "SELECT * FROM tasklist";
   err = "ERROR";
 
@@ -67,6 +68,7 @@ int start(sqlite3 *db, char* dbpath, LinkedList list)
       return 0;
     }
   }
+  
   return 1;
 }
 
@@ -122,7 +124,8 @@ int main()
   if (!start(db, dbpath, list))
     return 1;
   
-  
+  if (!isDataBaseEmpty(list, db, dbpath))
+    list.head = removeHead(list.head);
 
   isOver = 0;
   while (!isOver)
